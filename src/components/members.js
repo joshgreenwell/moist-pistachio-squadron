@@ -1,6 +1,7 @@
 import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Avatar } from '@material-ui/core'
 import { css } from 'emotion'
+import fetch from 'node-fetch'
 
 const root = css`
   width: 80%;
@@ -22,7 +23,18 @@ const rows = [
   { icon: 'J', name: 'James', race: '', spec: '', class: '', role: '' }
 ];
 
-const Guild = () => {
+const getActiveMembers = () => {
+  // TODO: Dynamic url
+  fetch(`http://localhost:8000/members`)
+    .then(resp => resp.json())
+    .then(resp => {
+      console.log(resp)
+    })
+  return rows
+}
+
+const Members = () => {
+  const rows = getActiveMembers()
   return (
     <Paper className={root}>
       <Table className={table}>
@@ -36,7 +48,7 @@ const Guild = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {(rows || []).map(row => (
             <TableRow key={row.name}>
               <TableCell component='th'>
                 <Avatar>{row.icon}</Avatar>
@@ -53,4 +65,4 @@ const Guild = () => {
   );
 }
 
-export default Guild
+export default Members

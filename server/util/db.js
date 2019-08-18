@@ -1,24 +1,51 @@
-const mongo = require('mongodb').MongoClient
+const mongoose = require('mongoose')
 const logger = require('./logger')
 
-const url = process.env.MONGODB_URI
+mongoose.Promise = Promise
 
-const instance = (collection) => mongo.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err, client) => {
-  if (err) {
-    logger.error(err)
-    return
-  }
-  const db = client.db('mps').collection(collection)
-  logger.info(`Connected to mps db: ${collection} collection`)
+const connect = () => {
+  const url = process.env.MONGODB_URI
+  
+  mongoose.connect(url, { useNewUrlParser: true })
+  const db = mongoose.connection
 
+  db.on('error', err =>
+    logger.error(`Failed to connect to db: ${err}`)
+  )
+  db.on('connected', () =>
+    logger.info(`Connected to db`)
+  )
+}
 
-
-  client.close()
+// Schemas
+const userSchema = new mongoose.Schema({
+  userName: String,
+  password: String,
+  admin: Boolean
 })
 
+const memberSchema = new mongoose.Schema({
+  icon: String,
+  name: String,
+  race: String,
+  class: String,
+  spec: String,
+  role: String,
+  active: Boolean
+})
+
+// Modals
+const User = new mongoose.model('user', userSchema)
+
+const Member = new mongoose.model('member', memberSchema)
+
+// Connect to db
+if (mongoose.connection.readyState !== 1) {
+  logger.info('Connecting to db...')
+  connect()
+}
+
 module.exports = {
-  instance
+  User,
+  Member
 }
