@@ -1,25 +1,17 @@
 {
-  "name": "moist-pistachios-squadron",
+  "name": "moist-pistachios-squadron-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.3.2",
-    "chalk": "^2.4.2",
-    "concurrently": "^4.1.2",
-    "dotenv": "^8.1.0",
     "emotion": "^10.0.14",
-    "express": "^4.17.1",
-    "material-ui": "^0.20.2",
-    "mongoose": "^5.6.9",
-    "nodemon": "^1.19.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"node ./server/\"",
-    "start:dev": "concurrently \"react-scripts start\" \"nodemon ./server/\"",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

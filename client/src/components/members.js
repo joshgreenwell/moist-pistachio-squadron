@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Avatar } from '@material-ui/core'
 import { css } from 'emotion'
-import fetch from 'node-fetch'
 
 const root = css`
   width: 80%;
@@ -14,27 +13,27 @@ const table = css`
 ` 
 
 // TODO: Switch to db
-const rows = [
-  { icon: 'J', name: 'Josh', race: 'Troll', spec: 'Holy', class: 'Priest', role: 'Healer' },
-  { icon: 'K', name: 'Khory', race: 'Tauren', spec: 'Restoration', class: 'Druid', role: 'Healer' },
-  { icon: 'B', name: 'Bri', race: 'Undead', spec: '', class: 'Warlock', role: 'DPS' },
-  { icon: 'B', name: 'Brian', race: 'Orc', spec: 'Protection', class: 'Warrior', role: 'Tank' },
-  { icon: 'R', name: 'Raf', race: 'Orc', spec: '', class: 'Hunter', role: 'DPS' },
-  { icon: 'J', name: 'James', race: '', spec: '', class: '', role: '' }
-];
-
-const getActiveMembers = () => {
-  // TODO: Dynamic url
-  fetch(`http://localhost:8000/members`)
-    .then(resp => resp.json())
-    .then(resp => {
-      console.log(resp)
-    })
-  return rows
-}
+// const rows = [
+//   { icon: 'J', name: 'Josh', race: 'Troll', spec: 'Holy', class: 'Priest', role: 'Healer' },
+//   { icon: 'K', name: 'Khory', race: 'Tauren', spec: 'Restoration', class: 'Druid', role: 'Healer' },
+//   { icon: 'B', name: 'Bri', race: 'Undead', spec: '', class: 'Warlock', role: 'DPS' },
+//   { icon: 'B', name: 'Brian', race: 'Orc', spec: 'Protection', class: 'Warrior', role: 'Tank' },
+//   { icon: 'R', name: 'Raf', race: 'Orc', spec: '', class: 'Hunter', role: 'DPS' },
+//   { icon: 'J', name: 'James', race: '', spec: '', class: '', role: '' }
+// ];
 
 const Members = () => {
-  const rows = getActiveMembers()
+  const [rows, setRows] = useState([])
+
+  useEffect(() => {
+    fetch(`/members`)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log(resp)
+        setRows(resp)
+      })
+  }, [])
+
   return (
     <Paper className={root}>
       <Table className={table}>
@@ -48,7 +47,7 @@ const Members = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(rows || []).map(row => (
+          {rows.map(row => (
             <TableRow key={row.name}>
               <TableCell component='th'>
                 <Avatar>{row.icon}</Avatar>
