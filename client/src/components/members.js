@@ -12,26 +12,19 @@ const table = css`
   min-width: 650;
 ` 
 
-// TODO: Switch to db
-// const rows = [
-//   { icon: 'J', name: 'Josh', race: 'Troll', spec: 'Holy', class: 'Priest', role: 'Healer' },
-//   { icon: 'K', name: 'Khory', race: 'Tauren', spec: 'Restoration', class: 'Druid', role: 'Healer' },
-//   { icon: 'B', name: 'Bri', race: 'Undead', spec: '', class: 'Warlock', role: 'DPS' },
-//   { icon: 'B', name: 'Brian', race: 'Orc', spec: 'Protection', class: 'Warrior', role: 'Tank' },
-//   { icon: 'R', name: 'Raf', race: 'Orc', spec: '', class: 'Hunter', role: 'DPS' },
-//   { icon: 'J', name: 'James', race: '', spec: '', class: '', role: '' }
-// ];
-
 const Members = () => {
   const [rows, setRows] = useState([])
 
   useEffect(() => {
-    fetch(`/members`)
-      .then(resp => resp.json())
-      .then(resp => {
-        console.log(resp)
-        setRows(resp)
+    (async () => {
+      // TODO: Make url dynamic
+      const resp = await fetch('http://localhost:8000/members', {
+        headers: {
+          'content-type': 'application/json'
+        }
       })
+      resp.json().then(members => setRows(members))
+    })()
   }, [])
 
   return (
